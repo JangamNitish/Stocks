@@ -16,7 +16,7 @@ public class StocksConnector
 	public Connection getConnection() throws SQLException, NamingException, ClassNotFoundException {
 
 		
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stocks", "root", "Nitish@1314");
 		return conn;
 	}

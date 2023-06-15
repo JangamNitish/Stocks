@@ -50,6 +50,9 @@ public class buyingstock extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		JSONObject obj = new JSONObject();
+		Gson gson = new Gson();
+		StockData obj1=new StockData();
 		ServletContext context = request.getServletContext();
 	
 		StocksConnector  ob = (StocksConnector) context.getAttribute("db");
@@ -57,9 +60,9 @@ public class buyingstock extends HttpServlet {
 			Connection conn = ob.getConnection();
 			StocksPojo json = gson.fromJson(request.getReader(), StocksPojo.class);
 			PrintWriter out = response.getWriter();
-			String st = obj1.buying(json, conn);
+			String st1 = obj1.firstTranscationCheck(json, conn);
 			response.setContentType("application/JSON");
-			obj.put("message", st);
+			obj.put("message", st1);
 			out.println(obj);
 		} catch (SQLException | NamingException e) {
 			// TODO Auto-generated catch block

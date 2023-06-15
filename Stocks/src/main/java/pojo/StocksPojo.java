@@ -16,7 +16,7 @@ public class StocksPojo {
 		this.price = price;
 	}
 	public void setQuantity(int quantity) {
-		Quantity = quantity;
+		this.Quantity = quantity;
 	}
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
@@ -24,7 +24,7 @@ public class StocksPojo {
 	public StocksPojo(int price, int quantity, String symbol) {
 		super();
 		this.price = price;
-		Quantity = quantity;
+		this.Quantity = quantity;
 		this.symbol = symbol;
 	}
 

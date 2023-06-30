@@ -12,24 +12,35 @@ public class StockData {
 	String SELECT = "SELECT * FROM stop_limit WHERE symbol=? ";
 	String UPDATE = "UPDATE stop_limit SET tradedQty=? WHERE symbol=?";
 	int TradedQuantity, updatedqty, TotalQty, updatedqty1 = 0;
-	String symbol;
-
+	String symbol,stopLimitsymbol;
+	
+	
 	public String firstTranscationCheck(StocksPojo S, Connection conn) {
 		String SELECTP = "SELECT * FROM purchase_history WHERE symbol=? ";
-		PreparedStatement InsertQuery;
+		PreparedStatement InsertQuery,SelectQuery;
 		try {
+			SelectQuery= conn.prepareStatement(SELECT);
 			InsertQuery = conn.prepareStatement(SELECTP);
 			InsertQuery.setString(1, S.getSymbol());
+			SelectQuery.setString(1, S.getSymbol());
+			ResultSet rs1 = SelectQuery.executeQuery();
+			while(rs1.next())
+			{
+				stopLimitsymbol=rs1.getString("symbol");
+			}
 			ResultSet rs = InsertQuery.executeQuery();
 			while (rs.next()) {
 				symbol = rs.getString("symbol");
 			}
 			if (symbol == null) {
 				String msg = buyingFirst(S, conn);
+				System.out.println("FIRST BUY "+symbol+""+S.getSymbol());
 
 				return msg;
 			} else {
 				String msg = buying(S, conn);
+				System.out.println(symbol+""+S.getSymbol());
+
 				return msg;
 			}
 
@@ -40,16 +51,18 @@ public class StockData {
 		return "First Transcation Has Not Satarted";
 
 	}
-
+	//FIRST BUY TRANSCATION METHOD
 	public String buyingFirst(StocksPojo S, Connection conn) {
 
 		PreparedStatement InsertQuery = null;
 		PreparedStatement UpdateQuery = null;
 		PreparedStatement SelectQuery = null;
 
-		if (S.getSymbol().equals("AAPL")) {
-			if (S.getPrice() == 200 && S.getQuantity() < 50) {
+		if (S.getSymbol().equals(stopLimitsymbol)) {
+			System.out.println(stopLimitsymbol);
 
+			if (S.getPrice() == 200 && S.getQuantity() < 50) {
+ 
 				try {
 					InsertQuery = conn.prepareStatement(INSERT);
 					SelectQuery = conn.prepareStatement(SELECT);
@@ -200,7 +213,7 @@ public class StockData {
 		}
 
 	}
-
+	// BUYING A STOCK BETWEEN (200-215) METHOD
 	public String buying(StocksPojo S, Connection conn) {
 
 		PreparedStatement InsertQuery = null;
@@ -208,8 +221,9 @@ public class StockData {
 		PreparedStatement SelectQuery = null;
 
 		int q = 0;
+		System.out.println(symbol);
 
-		if (S.getSymbol().equals("AAPL") && S.getPrice() >= 200 && S.getPrice() < 216) {
+		if (S.getSymbol().equals(stopLimitsymbol) && S.getPrice() >= 200 && S.getPrice() < 216) {
 			if ((S.getQuantity() > 0)) {
 				try {
 					SelectQuery = conn.prepareStatement(SELECT);
